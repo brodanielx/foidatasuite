@@ -1,0 +1,2 @@
+# djangoboilerplate
+# foidatasuite
