@@ -8,9 +8,13 @@ from foidata_proj.settings.constants import MAX_IMAGE_HEIGHT
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.png', upload_to='profile_pics')
+    nation_id = models.IntegerField(null=True)
+    city = models.CharField(max_length=100)
+    rank = models.CharField(max_length=100)
+    receive_emails = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return f'Profile: {self.nation_id} - {self.user.first_name} {self.user.last_name}'
 
     def save(self, *args, **kwargs):
         super(Profile, self).save(*args, **kwargs)

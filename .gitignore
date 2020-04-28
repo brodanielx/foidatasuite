@@ -1,6 +1,8 @@
 constants.py
 gs_client_secret.json
 
+csv/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     'core',
+    'foidata.apps.FoidataConfig',
     'users.apps.UsersConfig'
 ]
 
