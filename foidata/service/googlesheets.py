@@ -8,11 +8,19 @@ from .constants import (
     CLIENT_SECRET_FILENAME,
     SCOPE,
 
+    CSV_DIRECTORY,
+    DUES_CSV_NAME,
+    FCN_CSV_NAME,
+    FOI_CLASS_ATTENDANCE_CSV_NAME,
+    ROSTER_CSV_NAME,
+    SELF_EXAMINATION_CSV_NAME,
+
     DUES_SHEET_TITLE,
     FCN_SHEET_TITLE,
     FOI_CLASS_ATTENDANCE_SHEET_TITLE,
     ROSTER_SHEET_TITLE,
     ROSTER_WORKSHEET_TITLE,
+    SELF_EXAMINATION_SHEET_TITLE,
 
     WORKSHEETS_TO_EXCLUDE,
     WEEK_COUNT
@@ -24,6 +32,9 @@ class GoogleSheetsToCSVService:
     def __init__(self):
         self.client = self.get_client()
 
+        if not os.path.exists(CSV_DIRECTORY):
+            os.mkdir(CSV_DIRECTORY)
+
 
     def get_client(self):
         credentials = ServiceAccountCredentials.from_json_keyfile_name(
@@ -34,36 +45,40 @@ class GoogleSheetsToCSVService:
     def dues(self):
         sheet = self.client.open(DUES_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
-        df.to_csv('foidata/csv/dues.csv', index=False)
+        filepath = os.path.join(CSV_DIRECTORY, DUES_CSV_NAME)
+        df.to_csv(filepath, index=False)
 
     def fcn(self):
         sheet = self.client.open(FCN_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
-        df.to_csv('foidata/csv/fcn.csv', index=False)
+        filepath = os.path.join(CSV_DIRECTORY, FCN_CSV_NAME)
+        df.to_csv(filepath, index=False)
 
     def foi_class_attendance(self):
         sheet = self.client.open(FOI_CLASS_ATTENDANCE_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
-        df.to_csv('foidata/csv/foiclassattendance.csv', index=False)
+        filepath = os.path.join(CSV_DIRECTORY, FOI_CLASS_ATTENDANCE_CSV_NAME)
+        df.to_csv(filepath, index=False)
 
     def roster(self):
         sheet = self.client.open(ROSTER_SHEET_TITLE)
         worksheet = sheet.worksheet(ROSTER_WORKSHEET_TITLE)
 
         df = self.worksheet_to_df(worksheet)
-        df.to_csv('foidata/csv/roster.csv', index=False)
+        filepath = os.path.join(CSV_DIRECTORY, ROSTER_CSV_NAME)
+        df.to_csv(filepath, index=False)
 
 
     def self_examination(self):
-        # get correct google sheet title
-        df = self.sheet_by_title('Weekly FOI Report (Responses)')
-        df.to_csv('foidata/csv/selfexamination.csv', index=False)
+        df = self.sheet_by_title(SELF_EXAMINATION_SHEET_TITLE, 500)
+        filepath = os.path.join(CSV_DIRECTORY, SELF_EXAMINATION_CSV_NAME)
+        df.to_csv(filepath, index=False)
 
-    def sheet_by_title(self, sheet_title):
+    def sheet_by_title(self, sheet_title, week_count=WEEK_COUNT):
         sheet = self.client.open(sheet_title)
-        return self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
+        return self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE, week_count)
 
-    def sheet_to_df(self, sheet, worksheets_to_exlucde=None):
+    def sheet_to_df(self, sheet, worksheets_to_exlucde=None, week_count=WEEK_COUNT):
         worksheet_dfs = []
 
         if worksheets_to_exlucde:
@@ -78,7 +93,7 @@ class GoogleSheetsToCSVService:
         df = pd.concat(worksheet_dfs, axis=1)
         df = df.loc[:, ~df.columns.duplicated()]
 
-        return df.tail(WEEK_COUNT)
+        return df.tail(week_count)
 
     def worksheet_to_df(self, worksheet):
         data_lists = worksheet.get_all_values()
