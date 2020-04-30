@@ -1,33 +1,51 @@
 
-from .constants import WEEK_COUNT
-from ..service.googlesheets import GoogleSheetsService
+
+import pandas as pd
+
+from ..service.constants import (
+    CSV_DIRECTORY,
+    DUES_CSV_PATH,
+    FCN_CSV_PATH,
+    FOI_CLASS_ATTENDANCE_CSV_PATH,
+    ROSTER_CSV_PATH,
+    SELF_EXAMINATION_CSV_PATH,
+    
+    WEEK_COUNT
+)
+
 
 class FOIData:
 
     def __init__(self):
-        self.svc = GoogleSheetsService()
+        pass
 
     @property
     def roster(self):
-        df = self.svc.roster()
+        df = pd.read_csv(ROSTER_CSV_PATH)
         df['NationId'] = df.apply(lambda row: self.clean_nation_id(row), axis=1)
         return df
 
     @property
+    def dues(self):
+        df = pd.read_csv(DUES_CSV_PATH)
+        df = self.clean_df(df)
+        return df 
+
+    @property
     def foi_class_attendance(self):
-        df = self.svc.foi_class_attendance()
+        df = pd.read_csv(FOI_CLASS_ATTENDANCE_CSV_PATH)
         df = self.clean_df(df)
         return df 
 
     @property
     def fcn(self):
-        df = self.svc.fcn()
+        df = pd.read_csv(FCN_CSV_PATH)
         df = self.clean_df(df)
         return df 
 
     @property
     def self_examination(self):
-        df = self.svc.self_examination()
+        df = pd.read_csv(SELF_EXAMINATION_CSV_PATH)
         df = self.clean_df(df)
         return df 
 

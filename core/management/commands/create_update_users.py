@@ -2,7 +2,7 @@ import os
 
 from django.core.management.base import BaseCommand
 
-from foi.utils import FOIUtils
+from users.utils import UserUtils
 
 
 class Command(BaseCommand):
@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
 
-        utils = FOIUtils()
+        utils = UserUtils()
         
         created_count, updated_count = utils.create_or_update()
 

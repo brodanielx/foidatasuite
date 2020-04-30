@@ -9,11 +9,11 @@ from .constants import (
     SCOPE,
 
     CSV_DIRECTORY,
-    DUES_CSV_NAME,
-    FCN_CSV_NAME,
-    FOI_CLASS_ATTENDANCE_CSV_NAME,
-    ROSTER_CSV_NAME,
-    SELF_EXAMINATION_CSV_NAME,
+    DUES_CSV_PATH,
+    FCN_CSV_PATH,
+    FOI_CLASS_ATTENDANCE_CSV_PATH,
+    ROSTER_CSV_PATH,
+    SELF_EXAMINATION_CSV_PATH,
 
     DUES_SHEET_TITLE,
     FCN_SHEET_TITLE,
@@ -45,34 +45,29 @@ class GoogleSheetsToCSVService:
     def dues(self):
         sheet = self.client.open(DUES_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
-        filepath = os.path.join(CSV_DIRECTORY, DUES_CSV_NAME)
-        df.to_csv(filepath, index=False)
+        df.to_csv(DUES_CSV_PATH, index=False)
 
     def fcn(self):
         sheet = self.client.open(FCN_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
-        filepath = os.path.join(CSV_DIRECTORY, FCN_CSV_NAME)
-        df.to_csv(filepath, index=False)
+        df.to_csv(FCN_CSV_PATH, index=False)
 
     def foi_class_attendance(self):
         sheet = self.client.open(FOI_CLASS_ATTENDANCE_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
-        filepath = os.path.join(CSV_DIRECTORY, FOI_CLASS_ATTENDANCE_CSV_NAME)
-        df.to_csv(filepath, index=False)
+        df.to_csv(FOI_CLASS_ATTENDANCE_CSV_PATH, index=False)
 
     def roster(self):
         sheet = self.client.open(ROSTER_SHEET_TITLE)
         worksheet = sheet.worksheet(ROSTER_WORKSHEET_TITLE)
 
         df = self.worksheet_to_df(worksheet)
-        filepath = os.path.join(CSV_DIRECTORY, ROSTER_CSV_NAME)
-        df.to_csv(filepath, index=False)
+        df.to_csv(ROSTER_CSV_PATH, index=False)
 
 
     def self_examination(self):
         df = self.sheet_by_title(SELF_EXAMINATION_SHEET_TITLE, 500)
-        filepath = os.path.join(CSV_DIRECTORY, SELF_EXAMINATION_CSV_NAME)
-        df.to_csv(filepath, index=False)
+        df.to_csv(SELF_EXAMINATION_CSV_PATH, index=False)
 
     def sheet_by_title(self, sheet_title, week_count=WEEK_COUNT):
         sheet = self.client.open(sheet_title)
