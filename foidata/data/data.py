@@ -49,6 +49,17 @@ class FOIData:
         df = self.clean_df(df)
         return df 
 
+    def foi_by_nation_id(self, nation_id):
+        roster = self.roster
+        filter_by_nation_id = roster['NationId'] == nation_id
+
+        try:
+            foi = roster[filter_by_nation_id].iloc[0]
+            return foi
+        except IndexError:
+            print(f'Error: There is no FOI with the NationId of {nation_id}')
+            return pd.Series([])
+
 
     def fcn_line(self, oi_id=None):
         # x = self.fcn_df['Total]

@@ -35,11 +35,7 @@ class UserUtils:
                 user.is_active = bool(row['Active'])
                 user.save()
 
-                profile = Profile.objects.get(user=user)
-                profile.city = row['City']
-                profile.rank = row['Rank']
-                profile.receive_emails = row['ReceiveEmails']
-                profile.save()
+                profile = self.update_profile(user, row)
 
                 updated_count += 1
 
@@ -47,8 +43,6 @@ class UserUtils:
 
             else:
                 password  = self.generate_password()
-                print(username)
-                print(row)
 
                 user = User.objects.create_user(
                     username,
@@ -60,22 +54,28 @@ class UserUtils:
                 )
 
                 user.save()
-
-                profile = Profile(
-                    user = user,
-                    nation_id = int(row['NationId']),
-                    city = row['City'],
-                    rank = row['Rank'],
-                    receive_emails = row['ReceiveEmails']
-                )
-
-                profile.save()
+                
+                profile = self.update_profile(user, row)
 
                 created_count += 1
 
                 print(f'Created: username: {user} - password: {password} - {profile}')
 
         return created_count, updated_count
+
+
+    def update_profile(self, user, roster_row):
+        row = roster_row
+        profile = Profile.objects.get(user=user)
+
+        profile.nation_id = int(row['NationId'])
+        profile.city = row['City']
+        profile.rank = row['Rank']
+        profile.receive_emails = row['ReceiveEmails']
+
+        profile.save()
+
+        return profile
 
 
 
