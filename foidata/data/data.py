@@ -87,6 +87,7 @@ Data to collect:
     - Self Examination
         - Report completed / completed on time
             - list of FOI that have not completed report for current week
+                - not completed, late, on time
             - line graph 
                 - 3 levels on y axis: not submitted 0, late 1, on time 2
                 - last n weeks for each FOI individually  
