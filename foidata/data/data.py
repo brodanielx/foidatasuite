@@ -80,3 +80,46 @@ class FOIData:
         df = df.tail(WEEK_COUNT)
 
         return df
+
+
+'''
+Data to collect:
+    - Self Examination
+        - Report completed / completed on time
+            - list of FOI that have not completed report for current week
+            - line graph 
+                - 3 levels on y axis: not submitted 0, late 1, on time 2
+                - last n weeks for each FOI individually  
+        - Fajr prayer
+            - bar graph - most recent week for all FOI
+            - histogram - most recent week for all FOI
+            - line graph - last n weeks for each FOI individaully
+        - Hours studied
+            - bar graph - most recent week for all FOI
+            - histogram - most recent week for all FOI
+            - line graph - last n weeks for each FOI individaully
+        - Lost Found Brothers called
+            - bar graph - most recent week for all FOI
+            - histogram - most recent week for all FOI
+            - line graph - last n weeks for each FOI individaully
+        - Days exercised
+            - bar graph - most recent week for all FOI
+            - histogram - most recent week for all FOI
+            - line graph - last n weeks for each FOI individaully
+        - Hours soldiered (corner)
+            - bar graph - most recent week for all FOI
+            - line graph - last n weeks for all FOI total
+            - line graph - last n weeks for each FOI individually
+        - Hours soldiered (door to door)
+            - bar graph - most recent week for all FOI
+            - line graph - last n weeks for all FOI total
+            - line graph - last n weeks for each FOI individually
+
+    - FOI Class Attendance
+        - line graph - last n weeks for all FOI total
+        - line graph - last n weeks for each FOI individually
+    - FOI Dues
+        - bar graph - most recent week for all FOI
+        - line graph - last n weeks for all FOI total
+        - line graph - last n weeks for each FOI individually
+'''
