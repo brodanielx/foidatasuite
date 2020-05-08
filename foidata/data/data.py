@@ -29,24 +29,25 @@ class FOIData:
     def dues(self):
         df = pd.read_csv(DUES_CSV_PATH)
         df = self.clean_df(df)
-        return df 
+        return df.tail(WEEK_COUNT)
 
     @property
     def foi_class_attendance(self):
         df = pd.read_csv(FOI_CLASS_ATTENDANCE_CSV_PATH)
         df = self.clean_df(df)
-        return df 
+        return df.tail(WEEK_COUNT)
 
     @property
     def fcn(self):
         df = pd.read_csv(FCN_CSV_PATH)
         df = self.clean_df(df)
-        return df 
+        return df.tail(WEEK_COUNT)
 
     @property
     def self_examination(self):
         df = pd.read_csv(SELF_EXAMINATION_CSV_PATH)
         df = self.clean_df(df)
+        df['Timestamp'] = pd.to_datetime(df['Timestamp'])
         return df 
 
     def foi_by_nation_id(self, nation_id):
@@ -77,7 +78,6 @@ class FOIData:
 
     def clean_df(self, df):
         df = df.replace(r'', 0)
-        df = df.tail(WEEK_COUNT)
 
         return df
 
