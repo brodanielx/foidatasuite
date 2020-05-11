@@ -1,3 +1,4 @@
+from collections import deque
 from datetime import date, datetime, time, timedelta
 
 from .data import FOIData
@@ -23,6 +24,18 @@ class SelfExaminationReport:
         time_obj = time(16)
         return datetime.combine(sunday, time_obj)
 
+    def get_weeks(self):
+        latest_sunday_dt = self.latest_sunday_datetime
+        queue = deque()
+        for i in range(WEEK_COUNT + 1):
+            sunday = latest_sunday_dt - timedelta(weeks = i)
+            queue.appendleft(sunday)
+
+        sundays = list(queue)
+
+        return sundays 
+
+
     def foi_not_completed(self):
         df = self.ser
 
@@ -35,6 +48,4 @@ class SelfExaminationReport:
     
         profiles = Profile.objects.filter(receive_emails=True).exclude(nation_id__in=nation_ids)
 
-        # update roster with correct nation ids
-
-        print(profiles)
+        return profiles

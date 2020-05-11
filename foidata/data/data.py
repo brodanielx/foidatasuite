@@ -85,6 +85,12 @@ class FOIData:
 '''
 Data to collect:
     - Self Examination
+        - for all se data
+            - create new df for each foi - fill in weeks
+                - create new df with 'week' column = se.get_weeks()
+                - get data_df for individual foi for specific category (ex: timestamp, fajr, etc)
+                - apply lambda funtion to df => check for entry in data_df for each week,
+                  update column (ex: report completed, fajr, hours studied, etc) accordingly
         - Report completed / completed on time
             - list of FOI that have not completed report for current week
                 - not completed, late, on time
