@@ -61,6 +61,14 @@ class FOIData:
             print(f'Error: There is no FOI with the NationId of {nation_id}')
             return pd.Series([])
 
+    def se_by_nation_id(self, nation_id):
+        df = self.self_examination.copy()
+
+        nation_id_col = 'Please enter your Nation ID number:'
+        filter_by_nation_id = df[nation_id_col] == nation_id
+
+        return df[filter_by_nation_id] 
+
 
     def fcn_line(self, oi_id=None):
         # x = self.fcn_df['Total]

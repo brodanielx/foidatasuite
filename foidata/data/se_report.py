@@ -1,6 +1,8 @@
 from collections import deque
 from datetime import date, datetime, time, timedelta
 
+import pandas as pd
+
 from .data import FOIData
 from ..service.constants import WEEK_COUNT
 from users.models import Profile
@@ -12,6 +14,7 @@ class SelfExaminationReport:
         self.ser = self.data.self_examination
         self.latest_sunday = self.get_latest_sunday()
         self.latest_sunday_datetime = datetime.combine(self.latest_sunday, time.min)
+        self.weeks_df = self.get_weeks()
 
     def get_latest_sunday(self):
         today = date.today()
@@ -33,7 +36,9 @@ class SelfExaminationReport:
 
         sundays = list(queue)
 
-        return sundays 
+        df = pd.DataFrame(sundays, columns=['Week'])
+
+        return df 
 
 
     def foi_not_completed(self):
@@ -49,3 +54,23 @@ class SelfExaminationReport:
         profiles = Profile.objects.filter(receive_emails=True).exclude(nation_id__in=nation_ids)
 
         return profiles
+
+
+    def report_completed(self, nation_id):
+        se_df = self.data.se_by_nation_id(nation_id)
+        timestamps = se_df['Timestamp']
+        df = self.weeks_df.copy()
+        
+        df['ReportCompleted'] = df.apply(lambda row: self.report_completed_by_week(row['Week'], timestamps), axis=1)
+
+
+
+    def report_completed_by_week(self, week, timestamps):
+        start = week
+        end = start + timedelta(weeks=1)
+        entries = timestamps[(timestamps >= start) & (timestamps < end)]
+        print(entries)
+        # get latest entry from entries, return 0, 1, or 2
+        return 0
+
+    # create class SEReportCompleted(SelfExaminationReport) in new file 
