@@ -25,7 +25,6 @@ class Fajr(SelfExaminationReport):
         return x, y
 
         
-    
     def individual_by_week(self, week, fajr_df):
         start = week
         end = start + timedelta(weeks=1)
@@ -35,3 +34,15 @@ class Fajr(SelfExaminationReport):
             return 0
         else:
             return entries[self.fajr_column].iloc[-1]
+
+
+
+    def by_week(self, ending_sunday=None):
+        if not ending_sunday:
+            ending_sunday = self.latest_sunday_datetime
+
+        end_range = ending_sunday + timedelta(days=7)
+
+        se_df = self.ser
+        se_df = se_df[(se_df['Timestamp'] >= ending_sunday) & (se_df['Timestamp'] < end_range)]
+        print(se_df)

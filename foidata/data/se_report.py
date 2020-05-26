@@ -39,8 +39,3 @@ class SelfExaminationReport:
         df = pd.DataFrame(sundays, columns=['Week'])
 
         return df 
-
-
-    
-
-    # create class SEReportCompleted(SelfExaminationReport) in new file 

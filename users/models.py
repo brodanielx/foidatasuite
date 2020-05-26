@@ -4,6 +4,7 @@ from django.db import models
 from PIL import Image
 
 from foidata_proj.settings.constants import MAX_IMAGE_HEIGHT
+from .managers import ProfileManager
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -12,6 +13,9 @@ class Profile(models.Model):
     city = models.CharField(max_length=100, blank=True)
     rank = models.CharField(max_length=100, blank=True)
     receive_emails = models.BooleanField(default=False)
+
+    objects = ProfileManager()
+
 
     def __str__(self):
         return f'Profile: {self.nation_id} - {self.user.first_name} {self.user.last_name}'
