@@ -15,6 +15,10 @@ class SelfExaminationReport:
         self.latest_sunday = self.get_latest_sunday()
         self.latest_sunday_datetime = datetime.combine(self.latest_sunday, time.min)
         self.weeks_df = self.get_weeks()
+        self.profiles = Profile.objects.active()
+
+        self.name_column = 'Please enter your first and last name:'
+        self.nation_id_column = 'Please enter your Nation ID number:'
 
     def get_latest_sunday(self):
         today = date.today()

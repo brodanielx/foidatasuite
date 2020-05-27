@@ -31,10 +31,7 @@ class SEReportCompleted(SelfExaminationReport):
         
         df['ReportCompleted'] = df.apply(lambda row: self.report_completed_by_week(row['Week'], timestamps), axis=1)
 
-        x = list(df['Week'])
-        y = list(df['ReportCompleted'])
-
-        return x, y
+        return df
 
 
 

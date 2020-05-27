@@ -1,4 +1,5 @@
 
+import pandas as pd
 import random 
 import string
 
@@ -91,3 +92,10 @@ class UserUtils:
     def generate_password(self, string_length=10):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for i in range(string_length))
+
+
+    def get_profiles_df(self):
+        profiles = Profile.objects.active()
+        values = profiles.values('nation_id', 'user__first_name', 'user__last_name')
+        
+        return pd.DataFrame.from_records(values)
