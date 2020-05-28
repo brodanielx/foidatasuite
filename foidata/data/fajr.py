@@ -14,26 +14,6 @@ class Fajr(SelfExaminationReport):
         self.fajr_column = 'How many days did you make Fajr Prayer this week?'
         self.userutils = UserUtils()
 
-    def individual_historical(self, nation_id):
-        se_df = self.data.se_by_nation_id(nation_id)
-        fajr_df = se_df[['Timestamp', self.fajr_column]]
-        df = self.weeks_df.copy()
-
-        df['Fajr'] = df.apply(lambda row: self.individual_by_week_check(row['Week'], fajr_df), axis=1)
-
-        return df
-
-        
-    def individual_by_week_check(self, week, fajr_df):
-        start = week
-        end = start + timedelta(weeks=1)
-        entries = fajr_df[(fajr_df['Timestamp'] >= start) & (fajr_df['Timestamp'] < end)]
-
-        if entries.empty:
-            return 0
-        else:
-            return entries[self.fajr_column].iloc[-1]
-
 
 
     def group_single_week(self, ending_sunday=None):
