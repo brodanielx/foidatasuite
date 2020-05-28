@@ -36,7 +36,7 @@ class Fajr(SelfExaminationReport):
 
 
 
-    def single_week_group(self, ending_sunday=None):
+    def group_single_week(self, ending_sunday=None):
         if not ending_sunday:
             ending_sunday = self.latest_sunday_datetime
 
@@ -48,15 +48,23 @@ class Fajr(SelfExaminationReport):
 
         profiles_df = self.userutils.get_profiles_df()
         
-        profiles_df['Fajr'] = profiles_df.apply(lambda row: self.single_week_group_check(row['nation_id'], fajr_df), axis=1)
+        profiles_df['Fajr'] = profiles_df.apply(lambda row: self.group_single_week_check(row['nation_id'], fajr_df), axis=1)
 
         return profiles_df
 
     
-    def single_week_group_check(self, nation_id, fajr_df):
+    def group_single_week_check(self, nation_id, fajr_df):
         entries = fajr_df[fajr_df[self.nation_id_column] == nation_id]
         
         if entries.empty:
             return 0
         else:
             return entries[self.fajr_column].iloc[-1]
+
+
+    def individual_single_week(self, nation_id, ending_sunday=None):
+        group_df = self.group_single_week(ending_sunday)
+        
+        individual_df = group_df[group_df['nation_id'] == nation_id]
+
+        return individual_df['Fajr'].iloc[0]

@@ -24,18 +24,18 @@ class SEReportCompleted(SelfExaminationReport):
         return profiles
 
 
-    def report_completed(self, nation_id):
+    def individual_historical(self, nation_id):
         se_df = self.data.se_by_nation_id(nation_id)
         timestamps = se_df['Timestamp']
         df = self.weeks_df.copy()
         
-        df['ReportCompleted'] = df.apply(lambda row: self.report_completed_by_week(row['Week'], timestamps), axis=1)
+        df['ReportCompleted'] = df.apply(lambda row: self.individual_by_week_check(row['Week'], timestamps), axis=1)
 
         return df
 
 
 
-    def report_completed_by_week(self, week, timestamps):
+    def individual_by_week_check(self, week, timestamps):
         start = week
         end = start + timedelta(weeks=1)
         entries = timestamps[(timestamps >= start) & (timestamps < end)]
