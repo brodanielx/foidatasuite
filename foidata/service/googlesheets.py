@@ -96,3 +96,6 @@ class GoogleSheetsToCSVService:
 
         return pd.DataFrame(data_lists, columns=column_names)
 
+
+    #TODO: remove 'Total' column from dfs - calculate new 'Total' column by summing all columns per row
+

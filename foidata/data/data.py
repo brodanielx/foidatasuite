@@ -90,6 +90,12 @@ class FOIData:
         return df
 
 
+    def fcn_group_historical(self):
+        df = self.fcn.copy()
+        # df = df[['Week', 'Total']]
+        print(df.columns)
+
+
 '''
 Data to collect:
     - Self Examination
@@ -134,6 +140,10 @@ Data to collect:
         - line graph - last n weeks for all FOI total
         - line graph - last n weeks for each FOI individually
     - FOI Dues
+        - bar graph - most recent week for all FOI
+        - line graph - last n weeks for all FOI total
+        - line graph - last n weeks for each FOI individually
+    - FCN
         - bar graph - most recent week for all FOI
         - line graph - last n weeks for all FOI total
         - line graph - last n weeks for each FOI individually

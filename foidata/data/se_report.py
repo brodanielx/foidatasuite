@@ -16,7 +16,7 @@ class SelfExaminationReport:
         self.latest_sunday = self.get_latest_sunday()
         self.latest_sunday_datetime = datetime.combine(self.latest_sunday, time.min)
         self.weeks_df = self.get_weeks()
-        self.profiles = Profile.objects.active()
+        self.userutils = UserUtils()
 
         self.name_column = 'Please enter your first and last name:'
         self.nation_id_column = 'Please enter your Nation ID number:'
@@ -83,4 +83,38 @@ class SelfExaminationReport:
             return entries[column_name].iloc[-1]
 
 
-    # TODO: add remaining Fajr() methods here to have them in one place and not for every category
+    def group_single_week(self, column_name, ending_sunday=None):
+        column_abbrv = self.column_abbrvs.get(column_name)
+
+        if not ending_sunday:
+            ending_sunday = self.latest_sunday_datetime
+
+        end_range = ending_sunday + timedelta(days=7)
+
+        se_df = self.ser
+        se_df = se_df[(se_df['Timestamp'] >= ending_sunday) & (se_df['Timestamp'] < end_range)]
+        category_df = se_df[['Timestamp', self.nation_id_column, column_name]]
+
+        profiles_df = self.userutils.get_profiles_df()
+        
+        profiles_df[column_abbrv] = profiles_df.apply(lambda row: self.group_single_week_check(row['nation_id'], category_df, column_name), axis=1)
+
+        return profiles_df
+
+
+    def group_single_week_check(self, nation_id, category_df, column_name):
+        entries = category_df[category_df[self.nation_id_column] == nation_id]
+        
+        if entries.empty:
+            return 0
+        else:
+            return entries[column_name].iloc[-1]
+
+
+    def individual_single_week(self, nation_id, column_name, ending_sunday=None):
+        column_abbrv = self.column_abbrvs.get(column_name)
+        group_df = self.group_single_week(column_name, ending_sunday)
+        
+        individual_df = group_df[group_df['nation_id'] == nation_id]
+
+        return individual_df[column_abbrv].iloc[0]
