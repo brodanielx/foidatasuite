@@ -45,16 +45,19 @@ class GoogleSheetsToCSVService:
     def dues(self):
         sheet = self.client.open(DUES_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
+        df = df.replace(r'', 0)
         df.to_csv(DUES_CSV_PATH, index=False)
 
     def fcn(self):
         sheet = self.client.open(FCN_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
+        df = df.replace(r'', 0)
         df.to_csv(FCN_CSV_PATH, index=False)
 
     def foi_class_attendance(self):
         sheet = self.client.open(FOI_CLASS_ATTENDANCE_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
+        df = df.replace(r'', 0)
         df.to_csv(FOI_CLASS_ATTENDANCE_CSV_PATH, index=False)
 
     def roster(self):

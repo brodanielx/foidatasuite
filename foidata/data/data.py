@@ -41,6 +41,7 @@ class FOIData:
     def fcn(self):
         df = pd.read_csv(FCN_CSV_PATH)
         df = self.clean_df(df)
+        df = self.add_total_column(df)
         return df.tail(WEEK_COUNT)
 
     @property
@@ -90,10 +91,42 @@ class FOIData:
         return df
 
 
+    def add_total_column(self, df):
+        if 'Total' in df.columns:
+            df.drop(columns=['Total'], inplace=True)
+
+        columns = df.columns
+        df['Total'] = df.apply(lambda row: self.sum_columns(row, columns), axis=1)
+
+        return df
+
+
+    def sum_columns(self, row, columns):
+        columns = [col for col in columns if col != 'Week']
+        total = 0
+        for col in columns:
+            total += row[col]
+
+        return total
+
     def fcn_group_historical(self):
         df = self.fcn.copy()
-        # df = df[['Week', 'Total']]
-        print(df.columns)
+        df = df[['Week', 'Total']]
+        return df 
+
+
+    def fcn_individual_historical(self, profile):
+        df = self.fcn.copy()
+        # create property on profile model to return string - profile.nation_id - first_name last_name
+        # df = df[['Week', profile_str]]
+        # return df
+
+
+    def fcn_group_single_week(self, ending_sunday=None):
+        df = self.fcn.copy()
+        # add ability to specify week using ending_sunday
+        return df.tail(1).iloc[0]
+
 
 
 '''
