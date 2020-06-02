@@ -13,7 +13,7 @@ class SelfExaminationReport:
     def __init__(self):
         self.data = FOIData()
         self.ser = self.data.self_examination
-        self.latest_sunday = self.get_latest_sunday()
+        self.latest_sunday = self.data.get_latest_sunday()
         self.latest_sunday_datetime = datetime.combine(self.latest_sunday, time.min)
         self.weeks_df = self.get_weeks()
         self.userutils = UserUtils()
@@ -33,11 +33,6 @@ class SelfExaminationReport:
             self.lf_call_column : 'Calls',
             self.exercise_column : 'ExerciseDays'
         }
-
-    def get_latest_sunday(self):
-        today = date.today()
-        offset = (today.weekday() + 1)
-        return today - timedelta(days = offset)
 
     @property
     def past_deadline(self):

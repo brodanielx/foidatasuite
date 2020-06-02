@@ -1,4 +1,4 @@
-
+from datetime import date, datetime, time, timedelta
 
 import pandas as pd
 
@@ -17,7 +17,13 @@ from ..service.constants import (
 class FOIData:
 
     def __init__(self):
-        pass
+        self.latest_sunday = self.get_latest_sunday()
+        self.latest_sunday_datetime = datetime.combine(self.latest_sunday, time.min)
+
+    def get_latest_sunday(self):
+        today = date.today()
+        offset = (today.weekday() + 1)
+        return today - timedelta(days = offset)
 
     @property
     def roster(self):
@@ -41,6 +47,7 @@ class FOIData:
     def fcn(self):
         df = pd.read_csv(FCN_CSV_PATH)
         df = self.clean_df(df)
+        df['Week'] = pd.to_datetime(df['Week'])
         df = self.add_total_column(df)
         return df.tail(WEEK_COUNT)
 
@@ -115,17 +122,27 @@ class FOIData:
         return df 
 
 
-    def fcn_individual_historical(self, profile):
+    def fcn_individual_historical(self, profile_column_header):
         df = self.fcn.copy()
-        # create property on profile model to return string - profile.nation_id - first_name last_name
-        # df = df[['Week', profile_str]]
-        # return df
+        df = df[['Week', profile_column_header]]
+        return df
 
 
     def fcn_group_single_week(self, ending_sunday=None):
+        if not ending_sunday:
+            ending_sunday = self.latest_sunday_datetime
+
+        end_range = ending_sunday + timedelta(days=7)
+
         df = self.fcn.copy()
-        # add ability to specify week using ending_sunday
-        return df.tail(1).iloc[0]
+        df = df[(df['Week'] >= ending_sunday) & (df['Week'] < end_range)]
+        
+        return df.iloc[0]
+
+    # create fcn_inidividual_single_week()
+    # re write functions so category string can be passes that gets the df
+    # so another 4 functions do not have to be written for each category
+    # use the same 4 functions for each category
 
 
 

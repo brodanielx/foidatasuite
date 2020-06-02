@@ -29,3 +29,7 @@ class Profile(models.Model):
             output_size = (MAX_IMAGE_HEIGHT, MAX_IMAGE_HEIGHT)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+    @property
+    def column_header(self):
+        return f'{self.nation_id} - {self.user.first_name} {self.user.last_name}'
