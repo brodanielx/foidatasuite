@@ -116,6 +116,20 @@ class FOIData:
 
         return total
 
+    def get_df_by_category(self, category):
+        dfs_by_category = {
+            'FOIClassAttendance' : self.foi_class_attendance.copy(),
+            'Dues' : self.dues.copy(),
+            'FCN' : self.fcn.copy()
+        }
+
+        return dfs_by_category[category]
+
+    def group_historical_by_category(self, category):
+        df = self.get_df_by_category(category)
+        df = df[['Week', 'Total']]
+        return df 
+
     def fcn_group_historical(self):
         df = self.fcn.copy()
         df = df[['Week', 'Total']]
@@ -139,10 +153,30 @@ class FOIData:
         
         return df.iloc[0]
 
-    # create fcn_inidividual_single_week()
+
+    def fcn_inidividual_single_week(self, nation_id, ending_sunday=None):
+        series = self.fcn_group_single_week(ending_sunday)
+        s_dict = series.to_dict()
+        values = [
+            s_dict[k] for k in s_dict 
+            if self.is_nation_id_match_str(nation_id, k)
+        ]
+        return values[0]
+
+    def is_nation_id_match_str(self, nation_id, column):
+        # TODO: add nation ids to all spreadsheet columns
+        col_nation_id = column.split(' - ')[0]
+        try:
+            col_nation_id = int(col_nation_id)
+            return nation_id == col_nation_id
+        except:
+            return False
+
+  
     # re write functions so category string can be passes that gets the df
     # so another 4 functions do not have to be written for each category
     # use the same 4 functions for each category
+    # see group_historical_by_category() for first example
 
 
 
