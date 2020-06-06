@@ -35,12 +35,16 @@ class FOIData:
     def dues(self):
         df = pd.read_csv(DUES_CSV_PATH)
         df = self.clean_df(df)
+        df['Week'] = pd.to_datetime(df['Week'])
+        df = self.add_total_column(df)
         return df.tail(WEEK_COUNT)
 
     @property
     def foi_class_attendance(self):
         df = pd.read_csv(FOI_CLASS_ATTENDANCE_CSV_PATH)
         df = self.clean_df(df)
+        df['Week'] = pd.to_datetime(df['Week'])
+        df = self.add_total_column(df)
         return df.tail(WEEK_COUNT)
 
     @property
@@ -76,12 +80,6 @@ class FOIData:
         filter_by_nation_id = df[nation_id_col] == nation_id
 
         return df[filter_by_nation_id] 
-
-
-    def fcn_line(self, oi_id=None):
-        # x = self.fcn_df['Total]
-        # y = self.fcn_df['Week']
-        pass 
 
 
     def clean_nation_id(self, row):
@@ -130,32 +128,27 @@ class FOIData:
         df = df[['Week', 'Total']]
         return df 
 
-    def fcn_group_historical(self):
-        df = self.fcn.copy()
-        df = df[['Week', 'Total']]
-        return df 
 
-
-    def fcn_individual_historical(self, profile_column_header):
-        df = self.fcn.copy()
+    def individual_historical_by_category(self, category, profile_column_header):
+        df = self.get_df_by_category(category)
         df = df[['Week', profile_column_header]]
         return df
 
 
-    def fcn_group_single_week(self, ending_sunday=None):
+    def group_single_week_by_category(self, category, ending_sunday=None):
         if not ending_sunday:
             ending_sunday = self.latest_sunday_datetime
 
         end_range = ending_sunday + timedelta(days=7)
 
-        df = self.fcn.copy()
+        df = self.get_df_by_category(category)
         df = df[(df['Week'] >= ending_sunday) & (df['Week'] < end_range)]
         
         return df.iloc[0]
 
-
-    def fcn_inidividual_single_week(self, nation_id, ending_sunday=None):
-        series = self.fcn_group_single_week(ending_sunday)
+    
+    def individual_single_week_by_category(self, category, nation_id, ending_sunday=None):
+        series = self.group_single_week_by_category(category, ending_sunday)
         s_dict = series.to_dict()
         values = [
             s_dict[k] for k in s_dict 
@@ -172,12 +165,7 @@ class FOIData:
         except:
             return False
 
-  
-    # re write functions so category string can be passes that gets the df
-    # so another 4 functions do not have to be written for each category
-    # use the same 4 functions for each category
-    # see group_historical_by_category() for first example
-
+#TODO: create reporting app that handles weekly emails and UI reporting
 
 
 '''
