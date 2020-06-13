@@ -36,7 +36,8 @@ INSTALLED_APPS = [
 
     'core',
     'foidata.apps.FoidataConfig',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'reporting.apps.ReportingConfig',
 ]
 
 MIDDLEWARE = [

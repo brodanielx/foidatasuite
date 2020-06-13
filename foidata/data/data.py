@@ -165,8 +165,6 @@ class FOIData:
         except:
             return False
 
-#TODO: create reporting app that handles weekly emails and UI reporting
-
 
 '''
 Data to collect:
