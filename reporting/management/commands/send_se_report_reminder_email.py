@@ -20,13 +20,13 @@ class Command(BaseCommand):
 
         # test email
 
-        subject = 'Subject: Testing django email'
+        subject = 'Subject: Testing django email!!'
         message = 'this is the message'
         # html_message = '<h1>This is html!</h1>'
         from_email = 'baiisdemo@gmail.com'
         recipient_list = ['bro.danielx@gmail.com']
 
-        html_message = get_template('email_base.html').render()
+        html_message = get_template('email/email_ref.html').render()
 
         send_mail(
             subject, 
@@ -36,5 +36,8 @@ class Command(BaseCommand):
             html_message=html_message,
             fail_silently=True
         )
+
+        # use EmailMultiAlternatives for embedding images in email. 
+        # https://www.vlent.nl/weblog/2014/01/15/sending-emails-with-embedded-images-in-django/
 
         
