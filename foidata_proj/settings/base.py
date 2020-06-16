@@ -34,7 +34,7 @@ INSTALLED_APPS = [
 
     'crispy_forms',
 
-    'core',
+    'core.apps.CoreConfig',
     'foidata.apps.FoidataConfig',
     'users.apps.UsersConfig',
     'reporting.apps.ReportingConfig',
@@ -125,9 +125,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-
-# potential next steps
-# - add reCAPTCHA to login 
-# - customize password reset email (subject, body) w/ html template 
-#   - https://docs.djangoproject.com/en/3.0/topics/auth/default/#django.contrib.auth.views.PasswordResetView
-
