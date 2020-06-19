@@ -13,12 +13,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
 
-        subject = 'Subject: Testing django mail'
+        subject = 'Reminder: Weekly FOI Self-Examination Report'
 
         recipient_list = ['dnilssoncole@gmail.com']
 
         text_content = render_to_string('email/email_ref.txt')
-        html_content = render_to_string('email/email_ref.html')
+        html_content = render_to_string('email/se_report_reminder.html')
 
         send_email(
             subject,
@@ -28,7 +28,7 @@ class Command(BaseCommand):
         )
 
        
-        # apply template inheritance for email templates
-        # create weekly emails
+        # finish weekly reminder email - add form link to buttone
+        # create .txt templates for all emails
 
         
