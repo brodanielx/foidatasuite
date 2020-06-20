@@ -10,7 +10,7 @@ from django.core.mail import EmailMultiAlternatives
 def send_email(subject, recipient_list, text_content, html_content=None, attachments=None):
     
     if settings.DEBUG:
-        recipient_list = ['bro.danielx@gmail.com']
+        recipient_list = ['foitampa.automate@gmail.com']
 
     from_email = settings.EMAIL_HOST_USER
 

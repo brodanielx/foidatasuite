@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import render_to_string
 
 from core.send_email import send_email
+from foidata.data.se_report_completed import SEReportCompleted
 
 
 class Command(BaseCommand):
@@ -13,12 +14,29 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
 
+        data = SEReportCompleted()
+        profiles = list(data.foi_not_completed())
+
+        print('> Sending weekly self-examination report reminder emails...')
+        for profile in profiles:
+            self.render_email(profile)
+            print(f' - {profile}')
+       
+        # create .txt templates for all emails
+
+    def render_email(self, profile):
+        # add date to subject
         subject = 'Reminder: Weekly FOI Self-Examination Report'
 
-        recipient_list = ['dnilssoncole@gmail.com']
+        recipient_list = [profile.user.email]
+        context = {
+            'first_name': profile.user.first_name,
+            'last_name': profile.user.last_name,
+            'nation_id': profile.nation_id
+        }
 
         text_content = render_to_string('email/email_ref.txt')
-        html_content = render_to_string('email/se_report_reminder.html')
+        html_content = render_to_string('email/se_report_reminder.html', context)
 
         send_email(
             subject,
@@ -27,8 +45,6 @@ class Command(BaseCommand):
             html_content
         )
 
-       
-        # finish weekly reminder email - add form link to buttone
-        # create .txt templates for all emails
+        pass
 
         
