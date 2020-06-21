@@ -1,3 +1,4 @@
+from datetime import datetime
 from email.mime.image import MIMEImage
 
 from django.core.mail import EmailMultiAlternatives
@@ -22,11 +23,14 @@ class Command(BaseCommand):
             self.render_email(profile)
             print(f' - {profile}')
        
-        # create .txt templates for all emails
+        
+        # set up foitampa.automate@gmail.com for app emails
+        # set up logging - https://docs.djangoproject.com/en/3.0/topics/logging/
+        # resolve security messages from git bot
 
     def render_email(self, profile):
-        # add date to subject
-        subject = 'Reminder: Weekly FOI Self-Examination Report'
+        today_str = datetime.now().strftime('%m/%d/%Y')
+        subject = f'Reminder: Weekly FOI Self-Examination Report {today_str}'
 
         recipient_list = [profile.user.email]
         context = {
@@ -35,7 +39,7 @@ class Command(BaseCommand):
             'nation_id': profile.nation_id
         }
 
-        text_content = render_to_string('email/email_ref.txt')
+        text_content = render_to_string('email/se_report_reminder.txt', context)
         html_content = render_to_string('email/se_report_reminder.html', context)
 
         send_email(

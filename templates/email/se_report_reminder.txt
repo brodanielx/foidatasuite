@@ -1,0 +1,19 @@
+{% extends 'email/email_base.txt' %}
+
+
+{% block content %}
+As Salaam Alaikum Brother {{ first_name }} {{ last_name }} ({{ nation_id }}),
+I pray all is well with you and your family.
+We have not received your FOI Self-Examination for this week. The report is due every Sunday by 4PM. 
+Please click the link below to complete your report.
+
+Weekly FOI Self-Examination Report: https://forms.gle/EyGXGN1jFBxnGpx5A
+
+Striving to meet and surpass the goals outlined in the report, 
+along with our other repsonsibilities, will guarantee your success
+as an individual, and our success as a study group/mosque.
+May Allah continue to bless you with life and purpose!
+
+Your brother,
+Daniel X
+{% endblock %}

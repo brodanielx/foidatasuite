@@ -1,0 +1,6 @@
+{% block content %}
+
+{% endblock %}
+
+This is an automated message from the office of brother Student FOI Coordinator Daniel X. 
+If this email contains any mistakes, please email noitampa.foi@gmail.com.
