@@ -24,7 +24,6 @@ class Command(BaseCommand):
             print(f' - {profile}')
        
         
-        # set up foitampa.automate@gmail.com for app emails
         # set up logging - https://docs.djangoproject.com/en/3.0/topics/logging/
         # resolve security messages from git bot
 
