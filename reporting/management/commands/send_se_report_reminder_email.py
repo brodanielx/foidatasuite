@@ -24,8 +24,10 @@ class Command(BaseCommand):
             print(f' - {profile}')
        
         
+        # pass bool(profile.rank == 'Officer') to template and create different message for oficers
+            # asking to complete the form if they would like their data
         # set up logging - https://docs.djangoproject.com/en/3.0/topics/logging/
-        # resolve security messages from git bot
+        
 
     def render_email(self, profile):
         today_str = datetime.now().strftime('%m/%d/%Y')
