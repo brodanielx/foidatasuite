@@ -49,7 +49,7 @@ class Command(BaseCommand):
             subject,
             recipient_list,
             text_content,
-            # html_content
+            html_content
         )
 
         pass
