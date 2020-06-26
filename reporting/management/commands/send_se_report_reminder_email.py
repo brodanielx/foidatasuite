@@ -23,9 +23,7 @@ class Command(BaseCommand):
             self.render_email(profile)
             print(f' - {profile}')
        
-        
-        # pass bool(profile.rank == 'Officer') to template and create different message for oficers
-            # asking to complete the form if they would like their data
+
         # set up logging - https://docs.djangoproject.com/en/3.0/topics/logging/
         
 
@@ -34,10 +32,14 @@ class Command(BaseCommand):
         subject = f'Reminder: Weekly FOI Self-Examination Report {today_str}'
 
         recipient_list = [profile.user.email]
+
+        is_officer = profile.rank == 'Officer'
+
         context = {
             'first_name': profile.user.first_name,
             'last_name': profile.user.last_name,
-            'nation_id': profile.nation_id
+            'nation_id': profile.nation_id,
+            'is_officer': is_officer
         }
 
         text_content = render_to_string('email/se_report_reminder.txt', context)
@@ -47,7 +49,7 @@ class Command(BaseCommand):
             subject,
             recipient_list,
             text_content,
-            html_content
+            # html_content
         )
 
         pass
