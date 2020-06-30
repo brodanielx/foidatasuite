@@ -1,3 +1,4 @@
+import logging
 import os
 from email.mime.image import MIMEImage
 
@@ -5,12 +6,14 @@ from email.mime.image import MIMEImage
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
-
+logger = logging.getLogger('django')
 
 def send_email(subject, recipient_list, text_content, html_content=None, attachments=None):
     
     if settings.DEBUG:
         recipient_list = ['foitampa.automate@gmail.com']
+
+    logger.info(f'Start: Sending email - TO: {recipient_list} | Subject: {subject}')
 
     from_email = settings.EMAIL_HOST_USER
 
@@ -38,3 +41,5 @@ def send_email(subject, recipient_list, text_content, html_content=None, attachm
             msg.attach(msg_img)
 
     msg.send()
+
+    logger.info(f'Finished: Sending email - TO: {recipient_list} | Subject: {subject}')

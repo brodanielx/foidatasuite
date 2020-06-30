@@ -1,6 +1,7 @@
 import os
 
 import gspread
+import logging
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 
@@ -26,6 +27,7 @@ from .constants import (
     WEEK_COUNT
 )
 
+logger = logging.getLogger('googlesheets')
 
 class GoogleSheetsToCSVService:
 
@@ -43,34 +45,44 @@ class GoogleSheetsToCSVService:
         return gspread.authorize(credentials)
 
     def dues(self):
+        logger.info('Start: Obtaining FOI Dues data.')
         sheet = self.client.open(DUES_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
         df = df.replace(r'', 0)
         df.to_csv(DUES_CSV_PATH, index=False)
+        logger.info('Finished: Obtaining FOI Dues data.')
 
     def fcn(self):
+        logger.info('Start: Obtaining FCN data.')
         sheet = self.client.open(FCN_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
         df = df.replace(r'', 0)
         df.to_csv(FCN_CSV_PATH, index=False)
+        logger.info('Finished: Obtaining FCN data.')
 
     def foi_class_attendance(self):
+        logger.info('Start: Obtaining FOI Class Attendance data.')
         sheet = self.client.open(FOI_CLASS_ATTENDANCE_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
         df = df.replace(r'', 0)
         df.to_csv(FOI_CLASS_ATTENDANCE_CSV_PATH, index=False)
+        logger.info('Finished: Obtaining FOI Class Attendance data.')
 
     def roster(self):
+        logger.info('Start: Obtaining FOI Roster data.')
         sheet = self.client.open(ROSTER_SHEET_TITLE)
         worksheet = sheet.worksheet(ROSTER_WORKSHEET_TITLE)
 
         df = self.worksheet_to_df(worksheet)
         df.to_csv(ROSTER_CSV_PATH, index=False)
+        logger.info('Finished: Obtaining FOI Roster data.')
 
 
     def self_examination(self):
+        logger.info('Start: Obtaining FOI Self-Examination data.')
         df = self.sheet_by_title(SELF_EXAMINATION_SHEET_TITLE, 500)
         df.to_csv(SELF_EXAMINATION_CSV_PATH, index=False)
+        logger.info('Finished: Obtaining FOI Self-Examination data.')
 
     def sheet_by_title(self, sheet_title, week_count=WEEK_COUNT):
         sheet = self.client.open(sheet_title)
@@ -98,7 +110,4 @@ class GoogleSheetsToCSVService:
         column_names = data_lists.pop(0)
 
         return pd.DataFrame(data_lists, columns=column_names)
-
-
-    #TODO: remove 'Total' column from dfs - calculate new 'Total' column by summing all columns per row
 

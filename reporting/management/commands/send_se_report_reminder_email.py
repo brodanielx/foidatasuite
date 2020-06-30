@@ -22,9 +22,6 @@ class Command(BaseCommand):
         for profile in profiles:
             self.render_email(profile)
             print(f' - {profile}')
-       
-
-        # set up logging - https://docs.djangoproject.com/en/3.0/topics/logging/
         
 
     def render_email(self, profile):

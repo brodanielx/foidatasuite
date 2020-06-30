@@ -2,6 +2,7 @@ constants.py
 gs_client_secret.json
 
 csv/
+logs/
 
 
 # Byte-compiled / optimized / DLL files
