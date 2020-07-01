@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from email.mime.image import MIMEImage
 
@@ -7,6 +8,8 @@ from django.template.loader import render_to_string
 
 from core.send_email import send_email
 from foidata.data.se_report_completed import SEReportCompleted
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -42,13 +45,14 @@ class Command(BaseCommand):
         text_content = render_to_string('email/se_report_reminder.txt', context)
         html_content = render_to_string('email/se_report_reminder.html', context)
 
-        send_email(
-            subject,
-            recipient_list,
-            text_content,
-            html_content
-        )
-
-        pass
+        try:
+            send_email(
+                subject,
+                recipient_list,
+                text_content,
+                html_content
+            )
+        except:
+            logger.exception(f'An error occurred while sending email to {recipient_list} with the subject: {subject}')
 
         

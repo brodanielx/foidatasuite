@@ -27,7 +27,7 @@ from .constants import (
     WEEK_COUNT
 )
 
-logger = logging.getLogger('googlesheets')
+logger = logging.getLogger(__name__)
 
 class GoogleSheetsToCSVService:
 
@@ -45,44 +45,44 @@ class GoogleSheetsToCSVService:
         return gspread.authorize(credentials)
 
     def dues(self):
-        logger.info('Start: Obtaining FOI Dues data.')
+        logger.info(f'Start: Obtaining data from {DUES_SHEET_TITLE} sheet.')
         sheet = self.client.open(DUES_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
         df = df.replace(r'', 0)
         df.to_csv(DUES_CSV_PATH, index=False)
-        logger.info('Finished: Obtaining FOI Dues data.')
+        logger.info(f'Finished: Obtaining data from {DUES_SHEET_TITLE} sheet.')
 
     def fcn(self):
-        logger.info('Start: Obtaining FCN data.')
+        logger.info(f'Start: Obtaining data from {FCN_SHEET_TITLE} sheet.')
         sheet = self.client.open(FCN_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
         df = df.replace(r'', 0)
         df.to_csv(FCN_CSV_PATH, index=False)
-        logger.info('Finished: Obtaining FCN data.')
+        logger.info(f'Finished: Obtaining data from {FCN_SHEET_TITLE} sheet.')
 
     def foi_class_attendance(self):
-        logger.info('Start: Obtaining FOI Class Attendance data.')
+        logger.info(f'Start: Obtaining data from {FOI_CLASS_ATTENDANCE_SHEET_TITLE} sheet.')
         sheet = self.client.open(FOI_CLASS_ATTENDANCE_SHEET_TITLE)
         df = self.sheet_to_df(sheet, WORKSHEETS_TO_EXCLUDE)
         df = df.replace(r'', 0)
         df.to_csv(FOI_CLASS_ATTENDANCE_CSV_PATH, index=False)
-        logger.info('Finished: Obtaining FOI Class Attendance data.')
+        logger.info(f'Finished: Obtaining data from {FOI_CLASS_ATTENDANCE_SHEET_TITLE} sheet.')
 
     def roster(self):
-        logger.info('Start: Obtaining FOI Roster data.')
+        logger.info(f'Start: Obtaining data from {ROSTER_SHEET_TITLE} sheet.')
         sheet = self.client.open(ROSTER_SHEET_TITLE)
         worksheet = sheet.worksheet(ROSTER_WORKSHEET_TITLE)
 
         df = self.worksheet_to_df(worksheet)
         df.to_csv(ROSTER_CSV_PATH, index=False)
-        logger.info('Finished: Obtaining FOI Roster data.')
+        logger.info(f'Finished: Obtaining data from {ROSTER_SHEET_TITLE} sheet.')
 
 
     def self_examination(self):
-        logger.info('Start: Obtaining FOI Self-Examination data.')
+        logger.info(f'Start: Obtaining data from {SELF_EXAMINATION_SHEET_TITLE} sheet.')
         df = self.sheet_by_title(SELF_EXAMINATION_SHEET_TITLE, 500)
         df.to_csv(SELF_EXAMINATION_CSV_PATH, index=False)
-        logger.info('Finished: Obtaining FOI Self-Examination data.')
+        logger.info(f'Finished: Obtaining data from {SELF_EXAMINATION_SHEET_TITLE} sheet.')
 
     def sheet_by_title(self, sheet_title, week_count=WEEK_COUNT):
         sheet = self.client.open(sheet_title)

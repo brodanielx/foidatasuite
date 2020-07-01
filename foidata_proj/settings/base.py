@@ -14,6 +14,8 @@ import os
 
 from decouple import config
 
+from .log_config import LOGGING
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(
             os.path.dirname(
@@ -127,89 +129,4 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
-'''
-loggers
-    - project - default for whole project
-    - googlesheets 
-    - users
-    - emails
-'''
-
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'loggers':{
-        'django':{
-            'handlers':['project', 'mail_admins', 'console'],
-            'level':'INFO',
-            'propagate': True,
-        },
-        'emails':{
-            'handlers':['emails', 'mail_admins', 'console'],
-            'level':'INFO',
-            'propagate': True,
-        },
-        'googlesheets':{
-            'handlers':['googlesheets', 'mail_admins', 'console'],
-            'level':'INFO',
-            'propagate': False,
-        },
-        'django.requests': {
-            'handlers': ['project', 'mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-    },
-    'handlers':{
-        'project':{
-            'level':'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename':'./logs/project/project.log',
-            'maxBytes': 1024*1024*5, #5mb
-            'backupCount': 5,
-            'formatter':'verbose',
-        },
-        'emails':{
-            'level':'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename':'./logs/emails/emails.log',
-            'maxBytes': 1024*1024*5, #5mb
-            'backupCount': 5,
-            'formatter':'verbose',
-        },
-        'googlesheets':{
-            'level':'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename':'./logs/googlesheets/googlesheets.log',
-            'maxBytes': 1024*1024*5, #5mb
-            'backupCount': 5,
-            'formatter':'verbose',
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
-        'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-    },
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-}
+LOGGING = LOGGING

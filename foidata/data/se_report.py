@@ -25,6 +25,13 @@ class SelfExaminationReport:
         self.lf_call_column = 'How many Lost Found Brothers did you call and invite to The Teachings this week?'
         self.exercise_column = 'How many days did you exercise this week?'
 
+        self.data_columns = [
+            self.fajr_column,
+            self.study_column,
+            self.lf_call_column,
+            self.exercise_column
+        ]
+
         self.column_abbrvs = {
             self.name_column : 'Name',
             self.nation_id_column : 'NationId',
