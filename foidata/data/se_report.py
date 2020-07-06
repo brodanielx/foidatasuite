@@ -113,10 +113,69 @@ class SelfExaminationReport:
             return entries[column_name].iloc[-1]
 
 
-    def individual_single_week(self, nation_id, column_name, ending_sunday=None):
+    def individual_single_week_by_category(self, nation_id, column_name, ending_sunday=None):
         column_abbrv = self.column_abbrvs.get(column_name)
         group_df = self.group_single_week(column_name, ending_sunday)
         
         individual_df = group_df[group_df['nation_id'] == nation_id]
 
         return individual_df[column_abbrv].iloc[0]
+
+
+    def individual_single_week(self, nation_id, ending_sunday=None):
+        if not ending_sunday:
+            ending_sunday = self.latest_sunday_datetime
+
+        end_range = ending_sunday + timedelta(days=7)
+
+        se_df = self.ser
+        se_df = se_df[(se_df['Timestamp'] >= ending_sunday) & (se_df['Timestamp'] < end_range)]
+        se_df = se_df[se_df[self.nation_id_column] == nation_id]
+
+        if not se_df.empty:
+            return se_df.tail(1)
+
+        return se_df
+
+
+    def individual_last_two_weeks(self, nation_id, ending_sunday=None):
+        if not ending_sunday:
+            ending_sunday = self.latest_sunday_datetime
+
+        previous_ending_sunday = ending_sunday - timedelta(weeks=1)
+
+        current_week_df = self.individual_single_week(nation_id, ending_sunday)
+        previous_week_df = self.individual_single_week(nation_id, previous_ending_sunday)
+
+        current_week_records = current_week_df.to_dict('records')
+        previous_week_records = previous_week_df.to_dict('records')
+
+        current_week_dict = current_week_records[0] if len(current_week_records) else {}
+        previous_week_dict = previous_week_df.to_dict('records')[0]
+        current_week_dict = self.abbreviate_keys(current_week_dict)
+        previous_week_dict = self.abbreviate_keys(previous_week_dict)
+
+        print(nation_id)
+        print(current_week_dict)
+        print(previous_week_dict)
+        print('\n')
+
+        return 0
+
+    
+    def abbreviate_keys(self, dict_obj):
+
+        if not dict_obj:
+            return dict_obj
+
+        abbrv_dict = {}
+
+        for k, v in dict_obj:
+            abbrv = self.column_abbrvs.get(k)
+            
+            if abbrv:
+                abbrv_dict[abbrv] = v
+            else:
+                abbrv_dict[k] = v 
+        
+        return abbrv_dict

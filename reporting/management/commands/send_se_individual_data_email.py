@@ -29,8 +29,5 @@ class Command(BaseCommand):
     def render_email(self, profile):
         nation_id = profile.nation_id
 
-        for col in self.data.data_columns:
-
-            val = self.data.individual_single_week(nation_id, col)
-            print(f'{profile}')
-            print(f'{col}: {val}')
+        se_df = self.data.individual_last_two_weeks(nation_id)
+        
