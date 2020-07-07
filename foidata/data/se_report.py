@@ -32,13 +32,25 @@ class SelfExaminationReport:
             self.exercise_column
         ]
 
+        fajr_col_abbrv = 'Fajr'
+        study_col_abbrv = 'StudyHours'
+        lf_call_col_abbrv = 'Calls'
+        exercise_col_abbrv = 'ExerciseDays'
+
         self.column_abbrvs = {
             self.name_column : 'Name',
             self.nation_id_column : 'NationId',
-            self.fajr_column : 'Fajr',
-            self.study_column : 'StudyHours',
-            self.lf_call_column : 'Calls',
-            self.exercise_column : 'ExerciseDays'
+            self.fajr_column : fajr_col_abbrv,
+            self.study_column : study_col_abbrv,
+            self.lf_call_column : lf_call_col_abbrv,
+            self.exercise_column : exercise_col_abbrv
+        }
+
+        self.goals = {
+            fajr_col_abbrv: 7,
+            study_col_abbrv: 5,
+            lf_call_col_abbrv: 10,
+            exercise_col_abbrv: 7
         }
 
     @property
@@ -133,8 +145,11 @@ class SelfExaminationReport:
         se_df = se_df[se_df[self.nation_id_column] == nation_id]
 
         if not se_df.empty:
-            return se_df.tail(1)
+            se_df = se_df.tail(1)
+        else:
+            se_df = self.add_zero_row(se_df)
 
+        #return self.add_grades(se_df)
         return se_df
 
 
@@ -147,18 +162,21 @@ class SelfExaminationReport:
         current_week_df = self.individual_single_week(nation_id, ending_sunday)
         previous_week_df = self.individual_single_week(nation_id, previous_ending_sunday)
 
-        current_week_records = current_week_df.to_dict('records')
-        previous_week_records = previous_week_df.to_dict('records')
-
-        current_week_dict = current_week_records[0] if len(current_week_records) else {}
-        previous_week_dict = previous_week_df.to_dict('records')[0]
-        current_week_dict = self.abbreviate_keys(current_week_dict)
-        previous_week_dict = self.abbreviate_keys(previous_week_dict)
-
         print(nation_id)
-        print(current_week_dict)
-        print(previous_week_dict)
-        print('\n')
+        print(current_week_df)
+
+        # current_week_records = current_week_df.to_dict('records')
+        # previous_week_records = previous_week_df.to_dict('records')
+
+        # current_week_dict = current_week_records[0] if len(current_week_records) else {}
+        # previous_week_dict = previous_week_df.to_dict('records')[0]
+        # current_week_dict = self.abbreviate_keys(current_week_dict)
+        # previous_week_dict = self.abbreviate_keys(previous_week_dict)
+
+        # print(nation_id)
+        # print(current_week_dict)
+        # print(previous_week_dict)
+        # print('\n')
 
         return 0
 
@@ -179,3 +197,23 @@ class SelfExaminationReport:
                 abbrv_dict[k] = v 
         
         return abbrv_dict
+
+
+    def add_zero_row(self, df):
+        dict_obj = {}
+
+        for col in df.columns:
+            dict_obj[col] = 0
+
+        return df.append(dict_obj, ignore_index=True)
+
+
+
+# TODO:
+'''
+- abbreviate df column names 
+    - possibly add rename line to data.self_examination()
+    - test all previous functions
+    - https://cmdlinetips.com/2018/03/how-to-change-column-names-and-row-indexes-in-pandas/
+- add grade columns and values to df in individual_single_week() 
+'''
