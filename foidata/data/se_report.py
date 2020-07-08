@@ -25,17 +25,11 @@ class SelfExaminationReport:
         self.lf_call_column = 'How many Lost Found Brothers did you call and invite to The Teachings this week?'
         self.exercise_column = 'How many days did you exercise this week?'
 
-        self.data_columns = [
-            self.fajr_column,
-            self.study_column,
-            self.lf_call_column,
-            self.exercise_column
-        ]
-
         fajr_col_abbrv = 'Fajr'
         study_col_abbrv = 'StudyHours'
         lf_call_col_abbrv = 'Calls'
         exercise_col_abbrv = 'ExerciseDays'
+        report_completed_col = 'ReportCompleted'
 
         self.column_abbrvs = {
             self.name_column : 'Name',
@@ -46,7 +40,10 @@ class SelfExaminationReport:
             self.exercise_column : exercise_col_abbrv
         }
 
+        self.ser = self.ser.rename(columns=self.column_abbrvs)
+
         self.goals = {
+            report_completed_col: 2,
             fajr_col_abbrv: 7,
             study_col_abbrv: 5,
             lf_call_col_abbrv: 10,
@@ -75,13 +72,13 @@ class SelfExaminationReport:
 
     def individual_historical(self, nation_id, column_name):
 
-        column_abbrv = self.column_abbrvs.get(column_name)
-
         se_df = self.data.se_by_nation_id(nation_id)
+        se_df = se_df.rename(columns=self.column_abbrvs)
+
         category_df = se_df[['Timestamp', column_name]]
         historical_df = self.weeks_df.copy()
 
-        historical_df[column_abbrv] = historical_df.apply(lambda row: self.individual_by_week_check(row['Week'], category_df, column_name), axis=1)
+        historical_df[column_name] = historical_df.apply(lambda row: self.individual_by_week_check(row['Week'], category_df, column_name), axis=1)
 
         return historical_df
 
@@ -98,7 +95,6 @@ class SelfExaminationReport:
 
 
     def group_single_week(self, column_name, ending_sunday=None):
-        column_abbrv = self.column_abbrvs.get(column_name)
 
         if not ending_sunday:
             ending_sunday = self.latest_sunday_datetime
@@ -107,17 +103,17 @@ class SelfExaminationReport:
 
         se_df = self.ser
         se_df = se_df[(se_df['Timestamp'] >= ending_sunday) & (se_df['Timestamp'] < end_range)]
-        category_df = se_df[['Timestamp', self.nation_id_column, column_name]]
+        category_df = se_df[['Timestamp', 'NationId', column_name]]
 
         profiles_df = self.userutils.get_profiles_df()
         
-        profiles_df[column_abbrv] = profiles_df.apply(lambda row: self.group_single_week_check(row['nation_id'], category_df, column_name), axis=1)
+        profiles_df[column_name] = profiles_df.apply(lambda row: self.group_single_week_check(row['nation_id'], category_df, column_name), axis=1)
 
         return profiles_df
 
 
     def group_single_week_check(self, nation_id, category_df, column_name):
-        entries = category_df[category_df[self.nation_id_column] == nation_id]
+        entries = category_df[category_df['NationId'] == nation_id]
         
         if entries.empty:
             return 0
@@ -126,12 +122,11 @@ class SelfExaminationReport:
 
 
     def individual_single_week_by_category(self, nation_id, column_name, ending_sunday=None):
-        column_abbrv = self.column_abbrvs.get(column_name)
         group_df = self.group_single_week(column_name, ending_sunday)
         
         individual_df = group_df[group_df['nation_id'] == nation_id]
 
-        return individual_df[column_abbrv].iloc[0]
+        return individual_df[column_name].iloc[0]
 
 
     def individual_single_week(self, nation_id, ending_sunday=None):
@@ -142,15 +137,23 @@ class SelfExaminationReport:
 
         se_df = self.ser
         se_df = se_df[(se_df['Timestamp'] >= ending_sunday) & (se_df['Timestamp'] < end_range)]
-        se_df = se_df[se_df[self.nation_id_column] == nation_id]
+        se_df = se_df[se_df['NationId'] == nation_id]
 
         if not se_df.empty:
             se_df = se_df.tail(1)
         else:
             se_df = self.add_zero_row(se_df)
 
-        #return self.add_grades(se_df)
-        return se_df
+        return self.add_grades(se_df)
+
+
+    def add_grades(self, df):
+        
+        for col, goal in self.goals.items():
+            grade_col = f'{col}_grade'
+            df[grade_col] = df[col] / goal * 100
+
+        return df
 
 
     def individual_last_two_weeks(self, nation_id, ending_sunday=None):
@@ -162,41 +165,15 @@ class SelfExaminationReport:
         current_week_df = self.individual_single_week(nation_id, ending_sunday)
         previous_week_df = self.individual_single_week(nation_id, previous_ending_sunday)
 
+        current_week_dict = current_week_df.to_dict('records')[0]
+        previous_week_dict = previous_week_df.to_dict('records')[0]
+
         print(nation_id)
-        print(current_week_df)
-
-        # current_week_records = current_week_df.to_dict('records')
-        # previous_week_records = previous_week_df.to_dict('records')
-
-        # current_week_dict = current_week_records[0] if len(current_week_records) else {}
-        # previous_week_dict = previous_week_df.to_dict('records')[0]
-        # current_week_dict = self.abbreviate_keys(current_week_dict)
-        # previous_week_dict = self.abbreviate_keys(previous_week_dict)
-
-        # print(nation_id)
-        # print(current_week_dict)
-        # print(previous_week_dict)
-        # print('\n')
+        print(current_week_dict)
+        print(previous_week_dict)
+        print('\n')
 
         return 0
-
-    
-    def abbreviate_keys(self, dict_obj):
-
-        if not dict_obj:
-            return dict_obj
-
-        abbrv_dict = {}
-
-        for k, v in dict_obj:
-            abbrv = self.column_abbrvs.get(k)
-            
-            if abbrv:
-                abbrv_dict[abbrv] = v
-            else:
-                abbrv_dict[k] = v 
-        
-        return abbrv_dict
 
 
     def add_zero_row(self, df):
@@ -211,9 +188,6 @@ class SelfExaminationReport:
 
 # TODO:
 '''
-- abbreviate df column names 
-    - possibly add rename line to data.self_examination()
-    - test all previous functions
-    - https://cmdlinetips.com/2018/03/how-to-change-column-names-and-row-indexes-in-pandas/
-- add grade columns and values to df in individual_single_week() 
+    - add report_completed and report_completed_grade column to df
+        - def add_report_completed_col()
 '''
