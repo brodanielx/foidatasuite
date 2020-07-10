@@ -29,5 +29,5 @@ class Command(BaseCommand):
     def render_email(self, profile):
         nation_id = profile.nation_id
 
-        se_df = self.data.individual_last_two_weeks(nation_id)
+        context = self.data.individual_last_two_weeks(nation_id)
         

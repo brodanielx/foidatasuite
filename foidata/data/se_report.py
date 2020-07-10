@@ -29,7 +29,7 @@ class SelfExaminationReport:
         study_col_abbrv = 'StudyHours'
         lf_call_col_abbrv = 'Calls'
         exercise_col_abbrv = 'ExerciseDays'
-        report_completed_col = 'ReportCompleted'
+        self.report_completed_col = 'ReportCompleted'
 
         self.column_abbrvs = {
             self.name_column : 'Name',
@@ -43,7 +43,7 @@ class SelfExaminationReport:
         self.ser = self.ser.rename(columns=self.column_abbrvs)
 
         self.goals = {
-            report_completed_col: 2,
+            self.report_completed_col: 2,
             fajr_col_abbrv: 7,
             study_col_abbrv: 5,
             lf_call_col_abbrv: 10,
@@ -51,7 +51,7 @@ class SelfExaminationReport:
         }
 
     @property
-    def past_deadline(self):
+    def deadline(self):
         sunday = self.latest_sunday
         time_obj = time(16)
         return datetime.combine(sunday, time_obj)
@@ -144,7 +144,37 @@ class SelfExaminationReport:
         else:
             se_df = self.add_zero_row(se_df)
 
+        se_df = self.add_report_completed_cols(se_df, ending_sunday)
+
         return self.add_grades(se_df)
+
+    
+    def add_report_completed_cols(self, df, ending_sunday=None):
+        if not ending_sunday:
+            ending_sunday = self.latest_sunday_datetime
+
+        deadline = datetime.combine(ending_sunday, time(16))
+
+        df[self.report_completed_col] = df.apply(lambda row: self.report_completed_val(row['Timestamp'], deadline), axis=1)
+        df['ReportCompletedStatus'] = df.apply(lambda row: self.report_completed_status(row[self.report_completed_col]), axis=1)
+        return df
+
+    def report_completed_val(self, timestamp_val, deadline):
+        
+        if not timestamp_val:
+            return 0
+        elif timestamp_val > deadline:
+            return 1
+        else:
+            return 2
+
+    def report_completed_status(self, report_completed_val):
+        if report_completed_val == 0:
+            return 'Not submitted'
+        elif report_completed_val == 1:
+            return 'Late'
+        elif report_completed_val == 2:
+            return 'On time'
 
 
     def add_grades(self, df):
@@ -168,12 +198,12 @@ class SelfExaminationReport:
         current_week_dict = current_week_df.to_dict('records')[0]
         previous_week_dict = previous_week_df.to_dict('records')[0]
 
-        print(nation_id)
-        print(current_week_dict)
-        print(previous_week_dict)
-        print('\n')
+        context = {
+            'current_week': current_week_dict,
+            'previous_week': previous_week_dict
+        }
 
-        return 0
+        return context
 
 
     def add_zero_row(self, df):
