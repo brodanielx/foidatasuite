@@ -197,13 +197,27 @@ class SelfExaminationReport:
 
         current_week_dict = current_week_df.to_dict('records')[0]
         previous_week_dict = previous_week_df.to_dict('records')[0]
+        differences = self.generate_differences(current_week_dict, previous_week_dict)
 
         context = {
             'current_week': current_week_dict,
-            'previous_week': previous_week_dict
+            'previous_week': previous_week_dict,
+            'differences': differences
         }
 
         return context
+
+    
+    def generate_differences(self, dict1, dict2):
+        differences = {}
+
+        columns = [k for k in self.goals if k != self.report_completed_col]
+
+        for col in columns:
+            grade_col = f'{col}_grade'
+            differences[col] = dict1[grade_col] - dict2[grade_col]
+        
+        return differences
 
 
     def add_zero_row(self, df):
@@ -213,11 +227,3 @@ class SelfExaminationReport:
             dict_obj[col] = 0
 
         return df.append(dict_obj, ignore_index=True)
-
-
-
-# TODO:
-'''
-    - add report_completed and report_completed_grade column to df
-        - def add_report_completed_col()
-'''

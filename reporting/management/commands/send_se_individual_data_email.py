@@ -30,4 +30,12 @@ class Command(BaseCommand):
         nation_id = profile.nation_id
 
         context = self.data.individual_last_two_weeks(nation_id)
+        print(context)
+        print('\n')
         
+
+
+    #TODO:
+    # render template with context, test
+    # add 'update_data_csv' command to reporting commands programatically
+    # https://docs.djangoproject.com/en/3.0/ref/django-admin/#running-management-commands-from-your-code
