@@ -202,7 +202,9 @@ class SelfExaminationReport:
         context = {
             'current_week': current_week_dict,
             'previous_week': previous_week_dict,
-            'differences': differences
+            'differences': differences,
+            'start': previous_ending_sunday + timedelta(days=1),
+            'end': ending_sunday
         }
 
         return context

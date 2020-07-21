@@ -22,7 +22,7 @@ class Command(BaseCommand):
         self.data = SelfExaminationReport()
         profiles = Profile.objects.receive_emails()
 
-        for profile in profiles:
+        for profile in profiles[:1]:
             self.render_email(profile)
 
     
@@ -30,12 +30,39 @@ class Command(BaseCommand):
         nation_id = profile.nation_id
 
         context = self.data.individual_last_two_weeks(nation_id)
-        print(context)
-        print('\n')
+        context['full_name'] = f'{profile.user.first_name} {profile.user.last_name}'
+        context['nation_id'] = profile.nation_id
+
+        end = context['end'].strftime('%m/%d/%Y')
         
+        subject = f'Stats: Weekly FOI Self-Examination Report {end}'
+
+        recipient_list = [profile.user.email]
+
+        text_content = render_to_string('email/weekly_individual_stats.txt', context)
+        html_content = render_to_string('email/weekly_individual_stats.html', context)
+        
+        try:
+            send_email(
+                subject,
+                recipient_list,
+                text_content,
+                html_content
+            )
+        except:
+            logger.exception(f'An error occurred while sending email to {recipient_list} with the subject: {subject}')
 
 
     #TODO:
     # render template with context, test
     # add 'update_data_csv' command to reporting commands programatically
     # https://docs.djangoproject.com/en/3.0/ref/django-admin/#running-management-commands-from-your-code
+
+    #template data layout:
+    '''
+    table for each category:
+    - goal
+    - score
+    - grade
+    - change from last week
+    '''
