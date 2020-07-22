@@ -213,9 +213,7 @@ class SelfExaminationReport:
     def generate_differences(self, dict1, dict2):
         differences = {}
 
-        columns = [k for k in self.goals if k != self.report_completed_col]
-
-        for col in columns:
+        for col in self.goals:
             grade_col = f'{col}_grade'
             differences[col] = dict1[grade_col] - dict2[grade_col]
         
