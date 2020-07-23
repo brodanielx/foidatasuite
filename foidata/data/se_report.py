@@ -50,6 +50,14 @@ class SelfExaminationReport:
             exercise_col_abbrv: 7
         }
 
+        self.display_names = {
+            self.report_completed_col: 'Report Completed',
+            fajr_col_abbrv: 'Fajr Prayer (Days)',
+            study_col_abbrv: 'Reading Hours',
+            lf_call_col_abbrv: 'Lost Found Brothers Called',
+            exercise_col_abbrv: 'Days Exercised'
+        }
+
     @property
     def deadline(self):
         sunday = self.latest_sunday
@@ -199,10 +207,10 @@ class SelfExaminationReport:
         previous_week_dict = previous_week_df.to_dict('records')[0]
         differences = self.generate_differences(current_week_dict, previous_week_dict)
 
+        data_by_category = self.generate_ind_data_by_category(current_week_dict, differences)
+
         context = {
-            'current_week': current_week_dict,
-            'previous_week': previous_week_dict,
-            'differences': differences,
+            'data_by_category': data_by_category,
             'start': previous_ending_sunday + timedelta(days=1),
             'end': ending_sunday
         }
@@ -227,3 +235,29 @@ class SelfExaminationReport:
             dict_obj[col] = 0
 
         return df.append(dict_obj, ignore_index=True)
+
+
+    def generate_ind_data_by_category(self, current_week, differences):
+
+        categories = []
+
+        for col in self.goals:
+            display_name = self.display_names[col]
+            goal = self.goals[col]
+            score = current_week[col]
+            grade = current_week[f'{col}_grade']
+            diff_prev_week = differences[col]
+            status = current_week.get(f'{col}Status')
+
+            category = {
+                'display_name': display_name,
+                'goal': goal,
+                'score': score,
+                'grade': grade,
+                'diff_prev_week': diff_prev_week,
+                'status': status 
+            }
+
+            categories.append(category)
+
+        return categories

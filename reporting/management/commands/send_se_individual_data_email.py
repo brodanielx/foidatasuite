@@ -33,26 +33,24 @@ class Command(BaseCommand):
         context['full_name'] = f'{profile.user.first_name} {profile.user.last_name}'
         context['nation_id'] = profile.nation_id
 
-        print(context)
-
-        # end = context['end'].strftime('%m/%d/%Y')
+        end = context['end'].strftime('%m/%d/%Y')
         
-        # subject = f'Stats: Weekly FOI Self-Examination Report {end}'
+        subject = f'Stats: Weekly FOI Self-Examination Report {end}'
 
-        # recipient_list = [profile.user.email]
+        recipient_list = [profile.user.email]
 
-        # text_content = render_to_string('email/weekly_individual_stats.txt', context)
-        # html_content = render_to_string('email/weekly_individual_stats.html', context)
+        text_content = render_to_string('email/weekly_individual_stats.txt', context)
+        html_content = render_to_string('email/weekly_individual_stats.html', context)
         
-        # try:
-        #     send_email(
-        #         subject,
-        #         recipient_list,
-        #         text_content,
-        #         html_content
-        #     )
-        # except:
-        #     logger.exception(f'An error occurred while sending email to {recipient_list} with the subject: {subject}')
+        try:
+            send_email(
+                subject,
+                recipient_list,
+                text_content,
+                html_content
+            )
+        except:
+            logger.exception(f'An error occurred while sending email to {recipient_list} with the subject: {subject}')
 
 
     #TODO:
@@ -67,26 +65,6 @@ class Command(BaseCommand):
     - score
     - grade
     - change from last week
-
-
-    reorganize context dict for better template usage 
-
-    context = {
-        'categories': categories
-        'start': previous_ending_sunday + timedelta(days=1),
-        'end': ending_sunday
-    }
-
-    categories => list of category dict objects
-
-    categroy = {
-        'display_name': 'Fajr Prayer (Days)',
-        'abbrv': 'Fajr',
-        'goal': 7,
-        'score': 7,
-        'grade': %,
-        'diff_prev_week': %
-    }
 
     in html template - loop through categories dictionaries - create on html table in for loop
 

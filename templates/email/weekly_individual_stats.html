@@ -13,14 +13,11 @@
                 <td>
                     <!-- COPY -->
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                        <!-- <tr>
-                            <td align="center" style="font-size: 32px; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Bro {{ full_name }}</td>
-                        </tr> -->
                         <tr>
-                            <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Bro {{ full_name }} ({{ nation_id }})</td>
+                            <td align="center" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Bro {{ full_name }} ({{ nation_id }})</td>
                         </tr>
                         <tr>
-                            <td align="left" style="padding: 20px 0 0 0; font-size: 12px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">{{ start|date:"n/j/Y" }} - {{ end|date:"n/j/Y" }}</td>
+                            <td align="center" style="padding: 15px 0 0 0; font-size: 12px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">{{ start|date:"n/j/Y" }} - {{ end|date:"n/j/Y" }}</td>
                         </tr>
                     </table>
                 </td>
@@ -40,7 +37,13 @@
         <tr>
         <td align="center" valign="top" width="500">
         <![endif]-->
+        {% for category in data_by_category %}
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;" class="responsive-table">
+            <tr>
+                <td style="font-size: 16px; font-weight: bold;">
+                    {{ category.display_name }}
+                </td>
+            </tr>
             <tr>
                 <td style="padding: 10px 0 0 0; border-top: 1px dashed #aaaaaa;">
                     <!-- TWO COLUMNS -->
@@ -112,7 +115,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td style="padding-bottom: 30px;">
                     <!-- TWO COLUMNS -->
                     <table cellspacing="0" cellpadding="0" border="0" width="100%">
                         <tr>
@@ -146,42 +149,8 @@
                     </table>
                 </td>
             </tr>
-            <tr>
-                <td style="padding: 10px 0 0px 0; border-top: 1px solid #eaeaea; border-bottom: 1px dashed #aaaaaa;">
-                    <!-- TWO COLUMNS -->
-                    <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                        <tr>
-                            <td valign="top" class="mobile-wrapper">
-                                <!-- LEFT COLUMN -->
-                                <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left">
-                                    <tr>
-                                        <td style="padding: 0 0 10px 0;">
-                                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                                <tr>
-                                                    <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px; font-weight: bold;">Total</td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <!-- RIGHT COLUMN -->
-                                <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right">
-                                    <tr>
-                                        <td>
-                                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                                <tr>
-                                                    <td align="right" style="font-family: Arial, sans-serif; color: #7ca230; font-size: 16px; font-weight: bold;">$XX.XX</td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
         </table>
+        {% endfor %}
         <!--[if (gte mso 9)|(IE)]>
         </td>
         </tr>
