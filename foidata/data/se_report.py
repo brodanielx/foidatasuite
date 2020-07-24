@@ -99,7 +99,7 @@ class SelfExaminationReport:
         if entries.empty:
             return 0
         else:
-            return entries[column_name].iloc[-1]
+            return entries[column_name].iloc[0]
 
 
     def group_single_week(self, column_name, ending_sunday=None):
@@ -126,7 +126,7 @@ class SelfExaminationReport:
         if entries.empty:
             return 0
         else:
-            return entries[column_name].iloc[-1]
+            return entries[column_name].iloc[0]
 
 
     def individual_single_week_by_category(self, nation_id, column_name, ending_sunday=None):
@@ -148,7 +148,7 @@ class SelfExaminationReport:
         se_df = se_df[se_df['NationId'] == nation_id]
 
         if not se_df.empty:
-            se_df = se_df.tail(1)
+            se_df = se_df.head(1)
         else:
             se_df = self.add_zero_row(se_df)
 

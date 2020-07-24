@@ -22,7 +22,7 @@ class Command(BaseCommand):
         self.data = SelfExaminationReport()
         profiles = Profile.objects.receive_emails()
 
-        for profile in profiles[:1]:
+        for profile in profiles:
             self.render_email(profile)
 
     
@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
         end = context['end'].strftime('%m/%d/%Y')
         
-        subject = f'Stats: Weekly FOI Self-Examination Report {end}'
+        subject = f'Stats: Weekly FOI Self-Examination {end}'
 
         recipient_list = [profile.user.email]
 
@@ -54,18 +54,5 @@ class Command(BaseCommand):
 
 
     #TODO:
-    # render template with context, test
     # add 'update_data_csv' command to reporting commands programatically
     # https://docs.djangoproject.com/en/3.0/ref/django-admin/#running-management-commands-from-your-code
-
-    #template data layout:
-    '''
-    table for each category:
-    - goal
-    - score
-    - grade
-    - change from last week
-
-    in html template - loop through categories dictionaries - create on html table in for loop
-
-    '''

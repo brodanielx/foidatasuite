@@ -1,1 +1,11 @@
-This is a test!
+Bro {{ full_name }} ({{ nation_id }})
+
+{{ start|date:"n/j/Y" }} - {{ end|date:"n/j/Y" }}
+{% for category in data_by_category %}
+{{ category.display_name }}
+Goal: {{ category.goal }}
+Score: {{ category.score|floatformat }}
+Grade: {{ category.grade|floatformat }}%
+Change from Last Week: {% if category.diff_prev_week > 0 %}+{% endif %}{{ category.diff_prev_week|floatformat }}%
+{% if category.status %}Status: {{ category.status }}{% endif %}
+{% endfor %}

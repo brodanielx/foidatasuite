@@ -3,4 +3,5 @@
 {% endblock %}
 
 This is an automated message from the office of brother Student FOI Coordinator Daniel X. 
+Please do not reply to this email. Any replies to this email will not be read. 
 If this email contains any mistakes, please email noitampa.foi@gmail.com.
