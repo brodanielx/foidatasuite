@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 from email.mime.image import MIMEImage
 
+from django.core import management
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import render_to_string
@@ -18,6 +19,7 @@ class Command(BaseCommand):
     help = 'Send email with se data to inidividual FOI.'
 
     def handle(self, *args, **kwargs):
+        management.call_command('update_data_csv')
 
         self.data = SelfExaminationReport()
         profiles = Profile.objects.receive_emails()
@@ -35,7 +37,7 @@ class Command(BaseCommand):
 
         end = context['end'].strftime('%m/%d/%Y')
         
-        subject = f'Stats: Weekly FOI Self-Examination {end}'
+        subject = f'Weekly FOI Self-Examination {end}'
 
         recipient_list = [profile.user.email]
 
@@ -51,8 +53,3 @@ class Command(BaseCommand):
             )
         except:
             logger.exception(f'An error occurred while sending email to {recipient_list} with the subject: {subject}')
-
-
-    #TODO:
-    # add 'update_data_csv' command to reporting commands programatically
-    # https://docs.djangoproject.com/en/3.0/ref/django-admin/#running-management-commands-from-your-code

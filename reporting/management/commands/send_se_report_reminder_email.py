@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 from email.mime.image import MIMEImage
 
+from django.core import management
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import render_to_string
@@ -17,6 +18,7 @@ class Command(BaseCommand):
     help = 'Send reminder email to complete weekly self-examination report.'
 
     def handle(self, *args, **kwargs):
+        management.call_command('update_data_csv')
 
         data = SEReportCompleted()
         profiles = list(data.foi_not_completed())

@@ -1,5 +1,6 @@
 import os
 
+from django.core import management
 from django.core.management.base import BaseCommand, CommandError
 
 from foidata.service.constants import CSV_DIRECTORY
@@ -31,6 +32,8 @@ class Command(BaseCommand):
 
             self.stdout.write(' - Collecting Self-Examination...')
             svc.self_examination()
+
+            management.call_command('create_update_users')
 
             self.stdout.write(self.style.SUCCESS('Done!'))
 

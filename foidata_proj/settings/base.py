@@ -130,3 +130,14 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 LOGGING = LOGGING
+
+
+#TODO:
+'''
+    - create wekely admin report (email) for self-examination
+        - send to Bro Chad and myself
+        - list each Brothers stats - similar to individual stats email 
+        - for each category - list Brothers from highest amount to lowest amount
+    - deploy to linux server:
+    - write cron jobs for weekly se_report reminder (Sunday 3:30PM) and stats (Tuesday 8AM) emails
+'''
