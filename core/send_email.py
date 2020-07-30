@@ -10,8 +10,10 @@ logger = logging.getLogger('django')
 
 def send_email(subject, recipient_list, text_content, html_content=None, attachments=None):
     
-    if settings.DEBUG:
-        recipient_list = ['foitampa.automate@gmail.com']
+    # if settings.DEBUG:
+    #     recipient_list = ['foitampa.automate@gmail.com']
+
+    recipient_list = ['foitampa.automate@gmail.com']
 
     logger.info(f'Start: Sending email - TO: {recipient_list} | Subject: {subject}')
 

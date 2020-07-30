@@ -138,6 +138,6 @@ LOGGING = LOGGING
         - send to Bro Chad and myself
         - list each Brothers stats - similar to individual stats email - see if I can use template inheritance to not have to re-write individual stats email template
         - for each category - list Brothers from highest amount to lowest amount
-    - deploy to linux server:
+    - deploy to linux server: https://www.youtube.com/watch?v=Sa_kQheCnds&list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p&index=13
     - write cron jobs for weekly se_report reminder (Sunday 3:30PM) and stats (Tuesday 8AM) emails
 '''
