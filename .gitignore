@@ -4,6 +4,8 @@ gs_client_secret.json
 csv/
 logs/
 
+*.DS_Store
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
