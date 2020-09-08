@@ -1,3 +1,4 @@
+import logging
 import os
 
 from django.core import management
@@ -5,6 +6,8 @@ from django.core.management.base import BaseCommand, CommandError
 
 from foidata.service.constants import CSV_DIRECTORY
 from foidata.service.googlesheets import GoogleSheetsToCSVService
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -37,5 +40,6 @@ class Command(BaseCommand):
 
             self.stdout.write(self.style.SUCCESS('Done!'))
 
-        except:
+        except Exception as e:
+            logger.error(e)
             raise CommandError('An error occurred.')
