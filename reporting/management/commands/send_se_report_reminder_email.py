@@ -25,8 +25,8 @@ class Command(BaseCommand):
 
         print('> Sending weekly self-examination report reminder emails...')
         for profile in profiles:
-            self.render_email(profile)
             print(f' - {profile}')
+            self.render_email(profile)
         
 
     def render_email(self, profile):

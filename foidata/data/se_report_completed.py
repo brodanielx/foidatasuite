@@ -16,7 +16,7 @@ class SEReportCompleted(SelfExaminationReport):
 
         entries_this_week = df[after_latest_sunday]
         
-        nation_id_col = 'Please enter your Nation ID number:'
+        nation_id_col = self.column_abbrvs[self.nation_id_column]
         nation_ids = entries_this_week[nation_id_col].tolist()
     
         profiles = Profile.objects.filter(receive_emails=True).exclude(nation_id__in=nation_ids)
